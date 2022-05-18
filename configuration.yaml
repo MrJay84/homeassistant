@@ -1,0 +1,523 @@
+# Configure a default setup of Home Assistant (frontend, api, etc)
+default_config:
+
+panel_custom:
+  - name: Supervisor
+    url_path: hassio/system # url_path needs to be unique for each panel_custom config
+    sidebar_title: Supervisor
+    sidebar_icon: mdi:home-assistant # https://materialdesignicons.com/
+    module_url: /local/panel-redirect.js # 'local' is '/config/www/'
+
+# Text to speech
+tts:
+  - platform: google_translate
+
+automation: !include automations.yaml
+script: !include scripts.yaml
+scene: !include scenes.yaml
+
+influxdb:
+    host: 200.200.1.104
+    port: 8086
+    database: homeassistant
+    username: homeassistant
+    password: homeassistant
+    max_retries: 3
+    default_measurement: state
+
+
+# Media Emby
+media_player:
+  - platform: emby
+    host: 200.200.1.111
+    api_key: 6f95be2e96fd44d4b6cad67149dc9764
+
+
+
+# Utility Meters
+
+utility_meter:
+    optimus_energy_daily:
+      source: sensor.optimus_energy_today
+      cycle: daily
+    optimus_energy_weekly:
+      source: sensor.optimus_energy_today
+      cycle: weekly
+    optimus_energy_monthly:
+      source: sensor.optimus_energy_today
+      cycle: monthly
+    optimus_energy_yearly:
+      source: sensor.optimus_energy_today
+      cycle: yearly
+      
+    tv1_energy_daily:
+      source: sensor.tv1_plug_energy_today_2
+      cycle: daily
+    tv1_energy_weekly:
+      source: sensor.tv1_plug_energy_today_2
+      cycle: weekly
+    tv1_energy_monthly:
+      source: sensor.tv1_plug_energy_today_2
+      cycle: monthly
+    tv1_energy_yearly:
+      source: sensor.optimus_tv1_today
+      cycle: yearly
+
+    tv2_energy_daily:
+      source: sensor.tv2_plug_energy_today
+      cycle: daily
+    tv2_energy_weekly:
+      source: sensor.tv2_plug_energy_today
+      cycle: weekly
+    tv2_energy_monthly:
+      source: sensor.tv2_plug_energy_today
+      cycle: monthly
+    tv2_energy_yearly:
+      source: sensor.yearly_energy_today
+      cycle: yearly
+
+    tv3_energy_daily:
+      source: sensor.tv3_plug_energy_today
+      cycle: daily
+    tv3_energy_weekly:
+      source: sensor.tv3_plug_energy_today
+      cycle: weekly
+    tv3_energy_monthly:
+      source: sensor.tv3_plug_energy_today
+      cycle: monthly
+    tv3_energy_yearly:
+      source: sensor.tv3_energy_today
+      cycle: yearly
+
+    monitor5_energy_daily:
+      source: sensor.monitor5_energy_today
+      cycle: daily
+    monitor5_energy_weekly:
+      source: sensor.monitor5_energy_today
+      cycle: weekly
+    monitor5_energy_monthly:
+      source: sensor.monitor5_energy_today
+      cycle: monthly
+    montor5_energy_yearly:
+      source: sensor.monitor5_energy_today
+      cycle: yearly
+
+    monitor6_energy_daily:
+      source: sensor.monitor6_energy_today_2
+      cycle: daily
+    monitor6_energy_weekly:
+      source: sensor.monitor6_energy_today_2
+      cycle: weekly
+    monitor6_energy_monthly:
+      source: sensor.monitor6_energy_today_2
+      cycle: monthly
+    monitor6_energy_yearly:
+      source: sensor.monitor6_energy_today
+      cycle: yearly
+
+    ultron_energy_daily:
+      source: sensor.ultron_energy_today
+      cycle: daily
+    ultron_energy_weekly:
+      source: sensor.ultron_energy_today
+      cycle: weekly
+    ultron_energy_monthly:
+      source: sensor.ultron_energy_today
+      cycle: monthly
+    ultron_energy_yearly:
+      source: sensor.ultron_energy_today
+      cycle: yearly
+
+    das_one_energy_daily:
+      source: sensor.das_one_energy_today
+      cycle: daily
+    das_one_energy_weekly:
+      source: sensor.das_one_energy_today
+      cycle: weekly
+    das_one_energy_monthly:
+      source: sensor.das_one_energy_today
+      cycle: monthly
+    das_one_energy_yearly:
+      source: sensor.das_one_energy_today
+      cycle: yearly
+
+    attic_auxiliary_energy_daily:
+      source: sensor.attic_auxiliary_energy_kwh
+      cycle: daily
+    attic_auxiliary_energy_weekly:
+      source: sensor.attic_auxiliary_energy_kwh
+      cycle: weekly
+    attic_auxiliary_energy_monthly:
+      source: sensor.attic_auxiliary_energy_kwh
+      cycle: monthly
+    attic_auxiliary_energy_yearly:
+      source: sensor.attic_auxiliary_energy_kwh
+      cycle: yearly
+
+
+    primary_multiplug_energy_daily:
+      source: sensor.primary_multiplug_energy_kwh
+      cycle: daily
+    primary_multiplug_energy_weekly:
+      source: sensor.primary_multiplug_energy_kwh
+      cycle: weekly
+    primary_multiplug_energy_monthly:
+      source: sensor.primary_multiplug_energy_kwh
+      cycle: monthly
+    primary_multiplug_energy_yearly:
+      source: sensor.primary_multiplug_energy_kwh
+      cycle: yearly
+
+    secondary_multiplug_energy_daily:
+      source: sensor.secondary_multiplug_energy_kwh
+      cycle: daily
+    secondary_multiplug_energy_weekly:
+      source: sensor.secondary_multiplug_energy_kwh
+      cycle: weekly
+    secondary_multiplug_energy_monthly:
+      source: sensor.secondary_multiplug_energy_kwh
+      cycle: monthly
+    secondary_multiplug_energy_yearly:
+      source: sensor.secondary_multiplug_energy_kwh
+      cycle: yearly
+
+
+    attic_light_energy_daily:
+      source: sensor.attic_light_power_kwh
+      cycle: daily
+    attic_light_energy_weekly:
+      source: sensor.attic_light_power_kwh
+      cycle: weekly
+    attic_light_energy_monthly:
+      source: sensor.attic_light_power_kwh
+      cycle: monthly
+    attic_light_energy_yearly:
+      source: sensor.attic_light_power_kwh
+      cycle: yearly
+
+## kWh cumluative Battle-Station
+
+sensor:
+
+      - platform: template
+        sensors:
+          monitored_devices_yesterday_power:
+                friendly_name: "Monitored Devices Yesterday"
+                unit_of_measurement: 'kWh'
+                icon_template: mdi:speedometer
+                value_template: "{{ (states('sensor.monitor5_energy_yesterday') | float + 
+                                                        states('sensor.monitor6_energy_yesterday_2') | float +
+                                                        states('sensor.optimus_energy_yesterday') | float + 
+                                                        states('sensor.tv1_plug_energy_yesterday_2') | float + 
+                                                        states('sensor.tv2_plug_energy_yesterday') | float +
+                                                        states('sensor.tv3_plug_energy_yesterday') | float) | round(2) }}"
+      - platform: template
+        sensors:
+          monitored_devices_daily_power:
+                friendly_name: "Monitored Devices Daily"
+                unit_of_measurement: 'kWh'
+                icon_template: mdi:speedometer
+                value_template: "{{ (states('sensor.monitor5_energy_today') | float + 
+                                                        states('sensor.monitor6_energy_today_2') | float +
+                                                        states('sensor.optimus_energy_today') | float + 
+                                                        states('sensor.tv1_plug_energy_today_2') | float + 
+                                                        states('sensor.tv2_plug_energy_today') | float +
+                                                        states('sensor.tv3_plug_energy_today') | float) | round(2) }}"
+
+
+
+      - platform: template
+        sensors:
+          monitored_devices_weekly_power:
+                friendly_name: "Monitored Devices Weekley"
+                unit_of_measurement: 'kWh'
+                icon_template: mdi:speedometer
+                value_template: "{{ (states('sensor.monitor5_energy_weekly') | float + 
+                                                        states('sensor.monitor6_energy_weekly') | float +
+                                                        states('sensor.optimus_energy_weekly') | float + 
+                                                        states('sensor.tv1_plug_energy_weekly') | float + 
+                                                        states('sensor.tv2_plug_energy_weekly') | float +
+                                                        states('sensor.tv3_plug_energy_weekly') | float) | round(2) }}"
+
+
+      - platform: template
+        sensors:
+          monitored_devices_monthly_power:
+                friendly_name: "Monitored Devices Monthly"
+                unit_of_measurement: 'kWh'
+                icon_template: mdi:speedometer
+                value_template: "{{ (states('sensor.monitor5_energy_monthly') | float + 
+                                                        states('sensor.monitor6_energy_monthly') | float +
+                                                        states('sensor.optimus_energy_monthly') | float + 
+                                                        states('sensor.tv1_plug_energy_monthly') | float + 
+                                                        states('sensor.tv2_plug_energy_monthly') | float +
+                                                        states('sensor.tv3_plug_energy_monthly') | float) | round(2) }}"
+
+
+## Wattage
+
+      - platform: template
+        sensors:
+          monitored_devices_current_wattage:
+                friendly_name: "Monitored Devices Current Wattage"
+                unit_of_measurement: 'W'
+                icon_template: mdi:speedometer
+                value_template: "{{ (states('sensor.monitor5_energy_power') | float + 
+                                                        states('sensor.monitor6_energy_power_2') | float +
+                                                        states('sensor.optimus_energy_power') | float + 
+                                                        states('sensor.tv1_plug_energy_power') | float + 
+                                                        states('sensor.tv2_plug_energy_power') | float +
+                                                        states('sensor.tv3_plug_energy_power') | float +
+                                                        states('sensor.primary_multiplug_power') | float +
+                                                        states('sensor.secondary_multiplug_power') | float) | round(2) }}"
+
+
+## kWh Attic
+
+      - platform: template
+        sensors:
+          server_usage_yesterday_power:
+                friendly_name: "Server Usage Yesterday"
+                unit_of_measurement: 'kWh'
+                icon_template: mdi:speedometer
+                value_template: "{{ (states('sensor.das_one_energy_yesterday') | float + 
+                                                        states('sensor.ultron_energy_yesterday') | float) | round(2) }}"
+      
+      - platform: template
+        sensors:
+          server_usage_daily_power:
+                friendly_name: "Server Usage Daily"
+                unit_of_measurement: 'kWh'
+                icon_template: mdi:speedometer
+                value_template: "{{ (states('sensor.das_one_energy_today') | float + 
+                                                        states('sensor.ultron_energy_today') | float) | round(2) }}"
+
+      - platform: template
+        sensors:
+          server_usage_weekly_power:
+                friendly_name: "Server Usage Weekley"
+                unit_of_measurement: 'kWh'
+                icon_template: mdi:speedometer
+                value_template: "{{ (states('sensor.das_one_energy_weekly') | float + 
+                                                        states('sensor.ultron_energy_weekly') | float) | round(2) }}"
+
+      - platform: template
+        sensors:
+          server_usage_monthly_power:
+                friendly_name: "Server Usage Monthly"
+                unit_of_measurement: 'kWh'
+                icon_template: mdi:speedometer
+                value_template: "{{ (states('sensor.das_one_energy_monthly') | float + 
+                                                        states('sensor.ultron_energy_monthly') | float) | round(2) }}"
+
+## Wattage
+
+      - platform: template
+        sensors:
+          server_usage_current_wattage:
+                friendly_name: "Server Usage Current Wattage"
+                unit_of_measurement: 'W'
+                icon_template: mdi:speedometer
+                value_template: "{{ (states('sensor.das_one_energy_power') | float + 
+                                                        states('sensor.ultron_energy_power') | float) | round(2) }}"
+
+
+
+
+## Cost Sensors
+##  Battle-Station
+
+      - platform: template
+        sensors:
+          cost_monitored_devices_yesterday_power:
+                friendly_name: "Cost Yesterday"
+                icon_template: mdi:currency-gbp
+                unit_of_measurement: '£'
+                value_template: "{{ (states('sensor.monitored_devices_yesterday_power') | float *
+                                                        states('sensor.price_per_kwh') | float) | round(2) }}"
+
+      - platform: template
+        sensors:
+          cost_monitored_devices_daily_power:
+                friendly_name: "Cost Daily"
+                icon_template: mdi:currency-gbp
+                unit_of_measurement: '£'
+                value_template: "{{ (states('sensor.monitored_devices_daily_power') | float *
+                                                        states('sensor.price_per_kwh') | float) | round(2)  }}"
+
+
+
+      - platform: template
+        sensors:
+          cost_monitored_devices_weekly_power:
+                friendly_name: "Cost Weekly"
+                icon_template: mdi:currency-gbp
+                unit_of_measurement: '£'
+                value_template: "{{ (states('sensor.monitored_devices_weekly_power') | float *
+                                                        states('sensor.price_per_kwh') | float) | round(2)  }}" 
+
+
+      - platform: template
+        sensors:
+          cost_monitored_devices_monthly_power:
+                friendly_name: "Cost Monthly"
+                icon_template: mdi:currency-gbp
+                unit_of_measurement: '£'
+                value_template: "{{ (states('sensor.monitored_devices_monthly_power') | float *
+                                                        states('sensor.price_per_kwh') | float) | round(2)  }}"
+
+
+## Cost Sensors
+##  Attic Room
+
+      - platform: template
+        sensors:
+          cost_server_devices_yesterday_power:
+                friendly_name: "Server Cost Yesterday"
+                icon_template: mdi:currency-gbp
+                unit_of_measurement: '£'
+                value_template: "{{ (states('sensor.server_usage_yesterday_power') | float *
+                                                        states('sensor.price_per_kwh') | float) | round(2)  }}"
+
+
+      - platform: template
+        sensors:
+          cost_server_devices_daily_power:
+                friendly_name: "Server Cost Daily"
+                icon_template: mdi:currency-gbp
+                unit_of_measurement: '£'
+                value_template: "{{ (states('sensor.server_usage_daily_power') | float *
+                                                        states('sensor.price_per_kwh') | float) | round(2)  }}"
+
+
+
+      - platform: template
+        sensors:
+          cost_server_devices_weekly_power:
+                friendly_name: "Server Cost Weekly"
+                icon_template: mdi:currency-gbp
+                unit_of_measurement: '£'
+                value_template: "{{ (states('sensor.server_usage_weekly_power') | float *
+                                                        states('sensor.price_per_kwh') | float) | round(2)  }}"
+                                                        
+
+      - platform: template
+        sensors:
+          cost_server_devices_monthly_power:
+                friendly_name: "Sever Cost Monthly"
+                icon_template: mdi:currency-gbp
+                unit_of_measurement: '£'
+                value_template: "{{ (states('sensor.server_usage_monthly_power') | float *
+                                                        states('sensor.price_per_kwh') | float) | round(2)  }}"
+
+## Cost Senors
+## Totals for energy card
+
+      - platform: template
+        sensors:
+          total_cost_yesterday:
+                friendly_name: "Total Cost Yesterday"
+                icon_template: mdi:currency-gbp
+                value_template: "{{ (states('sensor.cost_server_devices_yesterday_power') | float +
+                                                        states('sensor.cost_monitored_devices_yesterday_power') | float +
+                                                        states('sensor.price_standing_charge') | float) | round(2)  }}"
+
+
+      - platform: template
+        sensors:
+          total_cost_daily:
+                friendly_name: "Total Cost Daily"
+                icon_template: mdi:currency-gbp
+                value_template: "{{ (states('sensor.cost_server_devices_daily_power') | float +
+                                                        states('sensor.cost_monitored_devices_daily_power') | float +
+                                                        states('sensor.price_standing_charge') | float) | round(2)  }}"
+
+
+      - platform: template
+        sensors:
+          total_cost_weekly:
+                friendly_name: "Total Cost Weekly"
+                icon_template: mdi:currency-gbp
+                value_template: "{{ (states('sensor.cost_server_devices_weekly_power') | float +
+                                                        states('sensor.cost_monitored_devices_daily_power') | float +
+                                                        states('sensor.price_standing_charge') | float * 7) | round(2)  }}"
+
+      - platform: template
+        sensors:
+          total_cost_monthly:
+                friendly_name: "Total Cost Monthly"
+                icon_template: mdi:currency-gbp
+                value_template: "{{ (states('sensor.cost_server_devices_monthly_power') | float +
+                                                        states('sensor.cost_monitored_devices_montly_power') | float +
+                                                        states('sensor.price_standing_charge') | float * 28) | round(2)  }}"
+
+
+
+
+## Tariff
+
+      - platform: template
+        sensors:
+          price_per_kwh:
+                friendly_name: "Price per kWh"
+                icon_template: mdi:currency-gbp
+                unit_of_measurement: '£'
+                value_template: "0.1875"
+
+      - platform: template
+        sensors:
+          price_standing_charge:
+                friendly_name: "Price Standing Charge"
+                icon_template: mdi:currency-gbp
+                unit_of_measurement: '£'
+                value_template: "0.2500"
+
+
+
+## Meross Plug Kilowatt Correction from wH
+
+      - platform: template
+        sensors:
+          attic_auxiliary_energy_kwh:
+                friendly_name: "Attic Auxiliary Energy"
+                unit_of_measurement: 'kWh'
+                value_template: "{{ (states('sensor.attic_auxiliary_energy') | float / 1000) }}"
+
+      - platform: template
+        sensors:
+          port_lamp_energy_kwh:
+                friendly_name: "Port Lamp Energy"
+                unit_of_measurement: 'kWh'
+                value_template: "{{ (states('sensor.port_lamp_energy') | float / 1000) }}"
+
+      - platform: template
+        sensors:
+          starboard_lamp_energy_kwh:
+                friendly_name: "Starboard Lamp Energy"
+                unit_of_measurement: 'kWh'
+                value_template: "{{ (states('sensor.starboard_lamp_energy') | float / 1000) }}"
+
+      - platform: template
+        sensors:
+          primary_multiplug_energy_kwh:
+                friendly_name: "Primary Multiplug Energy"
+                unit_of_measurement: 'kWh'
+                value_template: "{{ (states('sensor.primary_multiplug_energy')  | float / 1000) }}"
+
+
+      - platform: template
+        sensors:
+          secondary_multiplug_energy_kwh:
+                friendly_name: "Secondary Multiplug Energy"
+                unit_of_measurement: 'kWh'
+                value_template: "{{ (states('sensor.secondary_multiplug_energy')  | float / 1000) }}"
+
+      - platform: template
+        sensors:
+          attic_light_power_kwh:
+                friendly_name: "Attic Light Energy"
+                unit_of_measurement: 'kWh'
+                value_template: "{{ (states('sensor.sensor.attic_light_power')  | float / 1000) }}"
+
+
+
